@@ -1,5 +1,5 @@
-bmcgehee/example-node: 
-  # Distelli Manifest example  kkk
+bmcgeheeamu/amu-example: 
+  # Distelli Manifest example
   
   PreBuild:       
     # Add any build pre-requisites here 
@@ -10,37 +10,20 @@ bmcgehee/example-node:
   Build:
     # Enter your build steps here!
     # use nvm (node version manager)
-
     - source ~/.nvm/nvm.sh
-    # Install node v4.4.7
-    #- nvm install v4.4.7
+    
     # Install node v6.9.4
     - nvm install v6.9.4
+    
     # install latest npm version globally 
     - npm install npm -g   
 
-    # Testing
-    - sudo apt-get update
-    #- sudo apt-get -y install dnsutils
-    #- sudo apt-get -y install iputils-ping
-    #- nslookup skimdb.npmjs.com
-    #- dig skimdb.npmjs.com
-    #- ping -c 3 skimdb.npmjs.com
-    #- npm config set registry https://skimdb.npmjs.com/registry
-    #- nslookup registry.npmjs.com
-    #- dig registry.npmjs.com
-    #- ping -c 3 registry.npmjs.com
-    #- npm config set registry https://registry.npmjs.org
-
-
+    # Build and test the applicaiton
     - echo "---Building---"   
     - npm install 
     - echo "--Testing--"
-    #- npm test
+    - npm test
     
-    #- echo "Distelli Build Image?"
-    #- echo "====================="
-    #- cat /distelli_build_image.info || true
    
   PkgInclude:
     - '*'
@@ -52,21 +35,11 @@ bmcgehee/example-node:
     # These are available during all phases of a deploy.
     - PORT: "3000"
     - DISTELLI_INSTALLVIEW: "templates/notset.json"
-    - ELBNAME: "bmtest2"
-    - REGION: "eu-west-1"
-    - AWS_ACCESS_KEY_ID: "Set in Distelli"
-    - AWS_SECRET_ACCESS_KEY: "Set in Distelli"
     - PATH: "/usr/local/bin:$PATH"
-    - test: "Testing"
     - DISTELLI_TMP_FILENAME: "$DISTELLI_INSTALLHOME/DISTELLI.$DISTELLI_BUILDNUM.$DISTELLI_RELVERSION.tmp"
  
   InstallTemplates:
-    #- "docker-compose.yml"
-    #- "bin/startup.sh"
     - "views/index.pug"
-    #- conf/compute/httpHealthChecks/01.json
-    #- ["deregister-elb.sh","."]
-    #- ["register-elb.sh","."]
 
   PreInstall:  
     # Use this section to install any deployment pre-requisites.
@@ -81,43 +54,11 @@ bmcgehee/example-node:
     - echo "-Installing nodejs-"
     - sudo apt-get -y install nodejs 
  
-  PostInstall:
-    - echo "---PostInstall---"
-    #- cat bin/startup.sh
-    #- cat views/index.pug
-    #- cat conf/compute/httpHealthChecks/01.json
-    #- cat node_modules/pug-linker/index.js
-
-  PreStart:
-    #- echo "$PATH" 
-    #- which aws
-    # Check to see if aws cli is installed
-    #- if which aws >/dev/null; then
-    #-   echo "--AWS CLI exists--"
-    #- else
-    #-   echo "--Installing AWS CLI--"
-    #   Check to see if unzip is installed
-    #-   if which unzip >/dev/null; then
-    #-     echo "--Unzip exists--"
-    #-   else
-    #-     echo "--Installing unzip--"
-    #-     sudo apt-get -y install unzip
-    #-   fi
-    #-   curl "https://s3.amazonaws.com/aws-cli/awscli-bundle.zip" -o "awscli-bundle.zip"
-    #-   unzip awscli-bundle.zip
-    #-   sudo ./awscli-bundle/install -i /usr/local/aws -b /usr/local/bin/aws
-    #- fi
-    #- ./deregister-elb.sh
-    #- echo "Deregistered with the ELB. Waiting 1 minute"
-    #- sleep 60
- 
   Exec:
     - nodejs app.js 
      
   PostStart:
-    #- ./register-elb.sh
     - publicip=$(curl -s ident.me) || true
-    #- publicip=$(hostname -i)
     - 'echo "You can validate the install by pointing your browser at http://$publicip:$PORT"'
     - START=$(cat $DISTELLI_TMP_FILENAME)
     - rm "$DISTELLI_TMP_FILENAME"
