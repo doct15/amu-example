@@ -22,7 +22,7 @@ bmcgeheeamu/amu-example:
     - echo "---Building---"   
     - npm install 
     - echo "--Testing--"
-    - npm test
+    #- npm test
     
    
   PkgInclude:
